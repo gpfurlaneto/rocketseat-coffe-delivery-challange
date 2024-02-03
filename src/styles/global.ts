@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
-import { mixins } from './themes/mixins'
+import { mixins } from './mixins'
 
 export const GlobalStyle = createGlobalStyle`
   * {

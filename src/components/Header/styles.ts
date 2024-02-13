@@ -3,8 +3,9 @@ import styled from 'styled-components'
 import { mixins } from '../../styles/mixins'
 
 export const Container = styled.header`
-  max-width: 1160px;
+  width: 100%;
   padding: 32px 20px;
+  max-width: 1160px;
   margin: 0 auto;
 
   display: flex;

@@ -13,7 +13,7 @@ export function QuantityInput({
 }: QuantityInputProps) {
   return (
     <Container>
-      <button onClick={decrementQuantity}>
+      <button onClick={decrementQuantity} disabled={total <= 1}>
         <Minus size={14} />
       </button>
       <span>{total}</span>

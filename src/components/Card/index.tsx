@@ -23,7 +23,7 @@ export function Card({ coffee }: CardProps) {
   const theme = useTheme()
 
   const add = (): void => {
-    addItems(coffee.id, total)
+    addItems(coffee, total)
     setIsItemAdded(true)
     setTotal(1)
   }

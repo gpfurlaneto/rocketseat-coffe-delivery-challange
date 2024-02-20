@@ -27,7 +27,6 @@ export const CardContainer = styled.div`
   grid-column-gap: 32px;
 
   @media (max-width: 584px) {
-    background: red;
     justify-content: center;
   }
 

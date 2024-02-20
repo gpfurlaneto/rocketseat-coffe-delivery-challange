@@ -22,6 +22,10 @@ export const Content = styled.div`
 
   max-width: 1160px;
   margin: 0 auto;
+
+  @media (max-width: 770px) {
+    flex-direction: column;
+  }
 `
 export const Heading = styled.div`
   display: flex;

@@ -39,10 +39,3 @@ export const InputContainer = styled.div`
     font-style: italic;
   }
 `
-
-export const ErrorMessage = styled.p`
-  margin-top: 8px;
-  ${mixins.fonts.textXS};
-  font-weight: 400;
-  color: red;
-`

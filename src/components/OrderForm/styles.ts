@@ -50,7 +50,9 @@ export const FormCell = styled.div<{ $span: number }>`
 `
 
 export const PaymentOptions = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
+  & div {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+  }
 `

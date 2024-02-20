@@ -7,7 +7,8 @@ import {
   useState,
 } from 'react'
 import { FieldError } from 'react-hook-form'
-import { ErrorMessage, InputContainer } from './styles'
+import { InputContainer } from './styles'
+import { ErrorMessage } from '../ErrorMessage'
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   optional?: boolean
@@ -42,9 +43,7 @@ export const TextInput = forwardRef(function TextInput(
         {...props}
       />
       {optional && <span>Optional</span>}
-      {error?.message ? (
-        <ErrorMessage role="alert">{error.message}</ErrorMessage>
-      ) : null}
+      {error?.message ? <ErrorMessage message={error.message} /> : null}
     </InputContainer>
   )
 })

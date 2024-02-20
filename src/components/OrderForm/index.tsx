@@ -17,12 +17,47 @@ import {
 import { useTheme } from 'styled-components'
 import { TextInput } from '../TextInput'
 import { Radio } from '../Radio'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ErrorMessage } from '../ErrorMessage'
 
-export const OrderForm = React.forwardRef<HTMLFormElement>(
-  function Form(props, ref) {
+const newOrder = z.object({
+  cep: z.coerce.number({ invalid_type_error: 'Informe o CEP' }),
+  street: z.string().min(1, 'Informe a rua'),
+  number: z.string().min(1, 'Informe o número'),
+  fullAddress: z.string(),
+  neighborhood: z.string().min(1, 'Informe o bairro'),
+  city: z.string().min(1, 'Informe a cidade'),
+  state: z.string().min(1, 'Informe a UF'),
+  paymentMethod: z.enum(['credit', 'debit', 'cash'], {
+    invalid_type_error: 'Informe um método de pagamento',
+  }),
+})
+
+export type OrderDetails = z.infer<typeof newOrder>
+
+type OrderFormProps = {
+  id: string
+  onSubmit: (values: FormInputs) => void
+}
+
+export const OrderForm = React.forwardRef<HTMLFormElement, OrderFormProps>(
+  function Form({ onSubmit, ...props }, ref) {
+    const {
+      watch,
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm<OrderDetails>({
+      resolver: zodResolver(newOrder),
+    })
+
+    const selectedPaymentMethod = watch('paymentMethod')
     const theme = useTheme()
+
     return (
-      <form ref={ref} {...props}>
+      <form ref={ref} {...props} onSubmit={handleSubmit(onSubmit)}>
         <Container>
           <FormItem>
             <FormItemHeader $svgColor={theme.colors['yellow-dark']}>
@@ -34,26 +69,56 @@ export const OrderForm = React.forwardRef<HTMLFormElement>(
             </FormItemHeader>
             <FormGrid>
               <FormCell $span={1}>
-                <TextInput placeholder="CEP" />
+                <TextInput
+                  type="number"
+                  placeholder="CEP"
+                  {...register('cep')}
+                  error={errors?.cep}
+                />
               </FormCell>
               <FormCell $span={3}>
-                <TextInput placeholder="Rua" />
+                <TextInput
+                  placeholder="Rua"
+                  {...register('street')}
+                  error={errors?.street}
+                />
               </FormCell>
 
               <FormCell $span={1}>
-                <TextInput placeholder="Número" />
+                <TextInput
+                  placeholder="Número"
+                  {...register('number')}
+                  error={errors?.number}
+                />
               </FormCell>
               <FormCell $span={2}>
-                <TextInput placeholder="Complemento" optional />
+                <TextInput
+                  placeholder="Complemento"
+                  optional
+                  {...register('fullAddress')}
+                  error={errors?.fullAddress}
+                />
               </FormCell>
               <FormCell $span={1}>
-                <TextInput placeholder="Bairro" />
+                <TextInput
+                  placeholder="Bairro"
+                  {...register('neighborhood')}
+                  error={errors?.neighborhood}
+                />
               </FormCell>
               <FormCell $span={1}>
-                <TextInput placeholder="Cidade" />
+                <TextInput
+                  placeholder="Cidade"
+                  {...register('city')}
+                  error={errors?.city}
+                />
               </FormCell>
               <FormCell $span={1}>
-                <TextInput placeholder="UF" />
+                <TextInput
+                  placeholder="UF"
+                  {...register('state')}
+                  error={errors?.state}
+                />
               </FormCell>
             </FormGrid>
           </FormItem>
@@ -69,34 +134,38 @@ export const OrderForm = React.forwardRef<HTMLFormElement>(
               </div>
             </FormItemHeader>
             <PaymentOptions>
-              <Radio
-                isSelected={false}
-                // isSelected={selectedPaymentMethod === 'credit'}
-                // {...register('paymentMethod')}
-                value="credit"
-              >
-                <CreditCard size={16} />
-                <span>Cartão de crédito</span>
-              </Radio>
-              <Radio
-                isSelected={false}
-                // isSelected={selectedPaymentMethod === 'debit'}
-                // {...register('paymentMethod')}
-                value="debit"
-              >
-                <Bank size={16} />
-                <span>Cartão de débito</span>
-              </Radio>
+              <div>
+                <Radio
+                  isSelected={selectedPaymentMethod === 'credit'}
+                  {...register('paymentMethod')}
+                  value="credit"
+                >
+                  <CreditCard size={16} />
+                  <span>Cartão de crédito</span>
+                </Radio>
+                <Radio
+                  isSelected={selectedPaymentMethod === 'debit'}
+                  {...register('paymentMethod')}
+                  value="debit"
+                >
+                  <Bank size={16} />
+                  <span>Cartão de débito</span>
+                </Radio>
 
-              <Radio
-                isSelected={false}
-                // isSelected={selectedPaymentMethod === 'cash'}
-                // {...register('paymentMethod')}
-                value="cash"
-              >
-                <Money size={16} />
-                <span>Dinheiro</span>
-              </Radio>
+                <Radio
+                  isSelected={selectedPaymentMethod === 'cash'}
+                  {...register('paymentMethod')}
+                  value="cash"
+                >
+                  <Money size={16} />
+                  <span>Dinheiro</span>
+                </Radio>
+              </div>
+              {errors?.paymentMethod ? (
+                <ErrorMessage
+                  message={errors?.paymentMethod?.message as string}
+                />
+              ) : null}
             </PaymentOptions>
           </FormItem>
         </Container>

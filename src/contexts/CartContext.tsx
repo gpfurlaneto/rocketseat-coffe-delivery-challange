@@ -85,8 +85,6 @@ export function CartContextPropvider({
       '@coffee-delivery:cart-state-1.0.0',
     )
 
-    console.log(storedStateAsJSON)
-
     if (storedStateAsJSON) {
       const state = JSON.parse(storedStateAsJSON)
       setOrders(state.orders)
@@ -95,9 +93,7 @@ export function CartContextPropvider({
   }, [])
 
   useEffect(() => {
-    console.log('mudou')
     if (orders.length || Object.keys(selectedCoffees).length) {
-      console.log('entrou', { orders, selectedCoffees })
       const stateJSON = JSON.stringify({ orders, selectedCoffees })
       localStorage.setItem('@coffee-delivery:cart-state-1.0.0', stateJSON)
     }
